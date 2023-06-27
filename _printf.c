@@ -1,10 +1,22 @@
 #include "main.h"
 
+/** 
+ * _printf - prints a string in a format
+ * @format: string to print (char *)
+ * @...: variadic parameters (unknown)
+ *
+ * Return: number of characters
+ */
+
 int _printf(const char *format, ...)
 {
-    int i, count = 0;
+    int i, count, value = 0;
     va_list args;
     va_start(args, format);
+
+    if (format == NULL)
+	    return (-1);
+
     for (i = 0; format[i] != '\0'; i++) {
         if (format[i] == '%') {
             i++;
