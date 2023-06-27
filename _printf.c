@@ -1,42 +1,58 @@
-#include "main.h"
+ #include "main.h"
 
-/** 
- * _printf - prints a string in a format
- * @format: string to print (char *)
- * @...: variadic parameters (unknown)
- *
- * Return: number of characters
- */
+ int (*functions(const char *format))(va_list)
+ {
+     unsigned int i = 0;
+     eachModifier fun_used[] ={
+         {"c", print_char},
+         {"s", print_string},
+         {"%", print_mod},
+         {NULL, NULL},
+     };
 
-int _printf(const char *format, ...)
+ while (fun_used[i].modifier)
+ {
+   if (fun_used[i].modifier[0] == (*format))
+     return (fun_used[i].f);
+   i++;
+   }
+ return (NULL);
+ }
+
+ int _printf(const char *format, ...)
+ {
+ va_list otherArgs;
+int (*f)(va_list);
+unsigned int i = 0, tobePrinted = 0;
+if (format == NULL)
+return (-1);
+va_start(otherArgs, format);
+while (format[i])
 {
-    int i, count, value = 0;
-    va_list args;
-    va_start(args, format);
-
-    if (format == NULL)
-	    return (-1);
-
-    for (i = 0; format[i] != '\0'; i++) {
-        if (format[i] == '%') {
-            i++;
-            switch (format[i]) {
-                case 'c':
-                    count += _putchar(va_arg(args, int));
-                    break;
-                case 's':
-                    count += _puts(va_arg(args, char *));
-                    break;
-                case '%':
-                    count += _putchar('%');
-                    break;
-                default:
-                    break;
-            }
-        } else {
-            count += _putchar(format[i]);
-        }
-    }
-    va_end(args);
-    return count;
+while (format[i] != '%' && format[i])
+{
+_putchar(format[i]);
+tobePrinted++;
+i++;
+}
+if (format[i] == '\0')
+return (tobePrinted);
+f = functions(&format[i + 1]);
+if (f != NULL)
+{
+tobePrinted += f(otherArgs);
+i += 2;
+continue;
+}
+if (!format[i + 1])
+return (-1);
+_putchar(format[i]);
+tobePrinted++;
+if (format[i + 1] == '%')
+i += 2;
+else
+i++;
+}
+va_end(otherArgs);
+return (tobePrinted);
 }
