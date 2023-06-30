@@ -1,3 +1,4 @@
+ #include <stdarg.h>
  #include "main.h"
 
  int (*functions(const char *format))(va_list)
